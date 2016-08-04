@@ -3,12 +3,7 @@
  */
 package com.flatironschool.javacs;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.PriorityQueue;
+import java.util.*;
 
 /**
  * Provides sorting algorithms.
@@ -64,7 +59,32 @@ public class ListSorter<T> {
 	 */
 	public List<T> mergeSort(List<T> list, Comparator<T> comparator) {
         // FILL THIS IN!
-        return null;
+		if (list.size() <= 1) {
+			return list;
+		}
+
+		List<T> firstHalf = mergeSort(list.subList(0, list.size()/2), comparator);
+		List<T> secondHalf = mergeSort(list.subList(list.size()/2, list.size()), comparator);
+		List<T> result = new ArrayList<T>();
+
+		int i = 0, j = 0;
+		while (i < firstHalf.size() && j < secondHalf.size()) {
+			if (comparator.compare(firstHalf.get(i), secondHalf.get(j)) < 0) {
+				result.add(firstHalf.get(i++));
+			} else {
+				result.add(secondHalf.get(j++));
+			}
+		}
+
+		while (i < firstHalf.size()) {
+			result.add(firstHalf.get(i++));
+		}
+
+		while (j < secondHalf.size()) {
+			result.add(secondHalf.get(j++));
+		}
+
+        return result;
 	}
 
 	/**
@@ -76,6 +96,18 @@ public class ListSorter<T> {
 	 */
 	public void heapSort(List<T> list, Comparator<T> comparator) {
         // FILL THIS IN!
+		PriorityQueue<T> pq = new PriorityQueue<T>();
+
+		for (T item : list) {
+			pq.offer(item);
+		}
+
+		int listSize = list.size();
+		list.clear();
+
+		for (int i = 0; i < listSize; i++) {
+			list.add(pq.poll());
+		}
 	}
 
 	
@@ -90,7 +122,24 @@ public class ListSorter<T> {
 	 */
 	public List<T> topK(int k, List<T> list, Comparator<T> comparator) {
         // FILL THIS IN!
-        return null;
+		PriorityQueue<T> pq = new PriorityQueue<T>();
+
+		for (T item : list) {
+			if (pq.size() < k) {
+				pq.offer(item);
+			} else if (comparator.compare(pq.peek(), item) < 0) {
+				pq.poll();
+				pq.offer(item);
+			}
+		}
+
+		List<T> result = new ArrayList<T>();
+		int pqSize = pq.size();
+		for (int i = 0; i < pqSize; ++i) {
+			result.add(pq.poll());
+		}
+
+        return result;
 	}
 
 	
